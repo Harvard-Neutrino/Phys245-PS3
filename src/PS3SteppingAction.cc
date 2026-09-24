@@ -70,10 +70,14 @@ void PS3SteppingAction::UserSteppingAction(const G4Step* step)
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
-  fEventAction->AddEdep(edepStep);  
+  fEventAction->AddEdep(edepStep);
 
-  G4ThreeVector endPoint = step->GetPostStepPoint()->GetPosition();
-  //fEventAction->FillHistograms(edepStep, endPoint.getZ(), endPoint.getX(), endPoint.getY());
+  // record where the energy was deposited, for shower-profile studies
+  // (skip steps that deposit nothing to keep the output file small)
+  if (edepStep > 0.) {
+    G4ThreeVector endPoint = step->GetPostStepPoint()->GetPosition();
+    fEventAction->FillHistograms(edepStep, endPoint.getZ(), endPoint.getX(), endPoint.getY());
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

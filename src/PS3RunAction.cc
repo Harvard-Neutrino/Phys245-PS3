@@ -70,6 +70,17 @@ PS3RunAction::PS3RunAction()
   analysisManager->CreateNtupleDColumn("Edep");
   analysisManager->FinishNtuple();
 
+  // Per-step energy depositions for shower-profile studies (ntuple id 1).
+  // Energies in GeV, positions in cm; z is measured from the front face
+  // of the detector, where the particle gun sits.
+  analysisManager->CreateNtuple("showerEDep", "Per-step Energy Deposition in Volume");
+  analysisManager->CreateNtupleDColumn("E");
+  analysisManager->CreateNtupleDColumn("z");
+  analysisManager->CreateNtupleDColumn("r");
+  analysisManager->CreateNtupleDColumn("x");
+  analysisManager->CreateNtupleDColumn("y");
+  analysisManager->FinishNtuple();
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

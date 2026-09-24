@@ -45,8 +45,9 @@ PS3EventAction::PS3EventAction(PS3RunAction* runAction)
   fRunAction(runAction),
   fEdep(0.)
 {
-  // Offset in z for logical volume
-  z0 = -0.5 * m / 2;
+  // Front face of the envelope, where the particle gun sits
+  // (env_sizeZ = 10 m in PS3DetectorConstruction, centered at the origin)
+  z0 = -0.5 * 10*m;
 } 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -75,14 +76,14 @@ void PS3EventAction::EndOfEventAction(const G4Event*)
 void PS3EventAction::FillHistograms(G4double e, G4double z, G4double x, G4double y) 
 {
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-  // fill ntuple
-  std::cout << "here 2" << std::endl;
-  analysisManager->FillNtupleDColumn(0, e);
-  analysisManager->FillNtupleDColumn(1, z-z0);
-  analysisManager->FillNtupleDColumn(2, std::sqrt(x*x+y*y));
-  analysisManager->FillNtupleDColumn(3, x);
-  analysisManager->FillNtupleDColumn(4, y);
-  analysisManager->AddNtupleRow();
+  // fill the per-step shower ntuple (id 1): E in GeV, positions in cm,
+  // z measured from the front face of the envelope (the gun position)
+  analysisManager->FillNtupleDColumn(1, 0, e/GeV);
+  analysisManager->FillNtupleDColumn(1, 1, (z - z0)/cm);
+  analysisManager->FillNtupleDColumn(1, 2, std::sqrt(x*x + y*y)/cm);
+  analysisManager->FillNtupleDColumn(1, 3, x/cm);
+  analysisManager->FillNtupleDColumn(1, 4, y/cm);
+  analysisManager->AddNtupleRow(1);
   //G4int h2Id = analysisManager->GetH2Id("EdepKTeV");
   //analysisManager->FillH2(h2Id, x, y, e); // LB -- doesn't appear to be filled?
 }
