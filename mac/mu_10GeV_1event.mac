@@ -1,0 +1,6 @@
+# seed chosen to give a typical 10 GeV muon (no rare hard collision)
+/random/setSeeds 5 6
+/run/initialize
+/gun/particle mu-
+/gun/energy 10 GeV
+/run/beamOn 1
